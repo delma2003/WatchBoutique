@@ -38,25 +38,25 @@ python manage.py runserver
 ## 🖼️ Screenshots
 
 ### 👤 Register Page
-<img src="static/screenshots/register.png" width="700"/>
+<img src="screenshots/register.png" width="700"/>
 
 ### 🏠 Index Page
-<img src="static/screenshots/index.png" width="700"/>
+<img src="screenshots/index.png" width="700"/>
 
 ### 🛒 Cart Page
-<img src="static/screenshots/cart.png" width="700"/>
+<img src="screenshots/cart.png" width="700"/>
 
 ### 🛠️  Admin Page
-<img src="static/screenshots/admin.png" width="700"/>
+<img src="screenshots/admin.png" width="700"/>
 
 ### 👔 Men's Page
-<img src="static/screenshots/men.png" width="700"/>
+<img src="screenshots/men.png" width="700"/>
 
 ### ❤️ Wishlist Page
-<img src="static/screenshots/wishlist.png" width="700"/>
+<img src="screenshots/wishlist.png" width="700"/>
 
 ### 💳 Payment Page
-<img src="static/screenshots/payment.png" width="700"/>
+<img src="screenshots/payment.png" width="700"/>
 
 
 
