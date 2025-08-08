@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: linear-gradient(to right, #3b82f6, #c026d3);
+            font-family: Arial, sans-serif;
+        }
+        .register-container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 350px;
+        }
+        .input-field {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        .register-btn {
+            width: 100%;
+            padding: 10px;
+            background: #facc15;
+            border: none;
+            color: white;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="register-container">
+        <h2>Register</h2>
+        <form method="post">
+            {% csrf_token %}
+            
+            <input type="text" name="username" id="username" class="input-field" placeholder="Username" required>
+            <input type="password" name="password1" id="password1" class="input-field" placeholder="Password" required>
+            <input type="password" name="password2" id="password2" class="input-field" placeholder="Confirm Password" required>
+            <input type="text" name="address" id="address" class="input-field" placeholder="Address" required>
+            
+            <button type="submit" class="register-btn">Register</button>
+        </form>
+        <p>Already have an account? <a href="{% url 'app:login' %}">Login here</a></p>
+        {% for message in messages %}
+            <p style="color: red;">{{ message }}</p>
+        {% endfor %}
+    </div>
+</body>
+</html>

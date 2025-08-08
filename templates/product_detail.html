@@ -1,0 +1,468 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ watch.name }} - Product Details</title>
+    <link rel="stylesheet" href="{% static 'styles.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --flipkart-blue: #2874f0;
+            --flipkart-lightblue: #f0f8ff;
+            --flipkart-gray: #f1f3f6;
+            --flipkart-darkgray: #878787;
+            --flipkart-black: #212121;
+            --flipkart-green: #388e3c;
+            --flipkart-orange: #ff9f00;
+        }
+        
+        body {
+            font-family: 'Roboto', Arial, sans-serif;
+            background-color: var(--flipkart-gray);
+            margin: 0;
+            padding: 0;
+            color: var(--flipkart-black);
+            line-height: 1.4;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Product container */
+        .product-container {
+            display: flex;
+            background: white;
+            padding: 20px;
+            border-radius: 2px;
+            box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
+        }
+
+        /* Left side - product images */
+        .product-images {
+            width: 45%;
+            display: flex;
+            flex-direction: row;
+            gap: 15px;
+        }
+
+        .thumbnail-images {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            width: 80px;
+        }
+
+        .thumbnail-container {
+            position: relative;
+            border: 1px solid #f0f0f0;
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 4px;
+        }
+
+        .thumbnail-container img {
+            width: 100%;
+            height: auto;
+        }
+
+        .wishlist-icon, .main-wishlist-icon {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            color: #ccc;
+            font-size: 18px;
+            cursor: pointer;
+            z-index: 2;
+        }
+
+        .wishlist-icon:hover, .main-wishlist-icon:hover {
+            color: #ff3e6c;
+        }
+
+        .main-image {
+            flex-grow: 1;
+            padding: 10px;
+            position: relative;
+        }
+
+        .main-image img {
+            max-width: 100%;
+            max-height: 400px;
+            object-fit: contain;
+        }
+
+        /* Right side - product info */
+        .product-info {
+            width: 55%;
+            padding-left: 30px;
+        }
+
+        .product-title {
+            font-size: 20px;
+            font-weight: 500;
+            color: var(--flipkart-black);
+            margin-bottom: 5px;
+        }
+
+        .product-subtitle {
+            font-size: 14px;
+            color: var(--flipkart-darkgray);
+            margin-bottom: 10px;
+        }
+
+        .rating-container {
+            display: flex;
+            align-items: center;
+            background: var(--flipkart-green);
+            color: white;
+            padding: 2px 8px 2px 6px;
+            border-radius: 3px;
+            width: fit-content;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        .rating-container i {
+            font-size: 12px;
+            margin-right: 4px;
+        }
+
+        .rating-count {
+            color: var(--flipkart-blue);
+            font-size: 14px;
+            margin-left: 8px;
+        }
+
+        .price-container {
+            margin: 15px 0;
+        }
+
+        .current-price {
+            font-size: 28px;
+            font-weight: 500;
+        }
+
+        .size-selector {
+            margin: 20px 0;
+        }
+
+        .size-selector label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 8px;
+            color: var(--flipkart-darkgray);
+        }
+
+        .size-selector select {
+            padding: 8px 10px;
+            border: 1px solid #c2c2c2;
+            border-radius: 2px;
+            font-size: 14px;
+            width: 200px;
+            outline: none;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 25px;
+        }
+
+        .btn {
+            padding: 12px 20px;
+            font-size: 14px;
+            font-weight: 500;
+            border-radius: 2px;
+            cursor: pointer;
+            text-transform: uppercase;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .btn-primary {
+            background: var(--flipkart-orange);
+            color: white;
+            border: none;
+        }
+
+        .btn-secondary {
+            background: white;
+            color: var(--flipkart-blue);
+            border: 1px solid var(--flipkart-blue);
+        }
+
+        .size-guide-link {
+            margin-top: 15px;
+            font-size: 14px;
+        }
+
+        .size-guide-link a {
+            color: var(--flipkart-blue);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+        }
+
+        .size-guide-link a:hover {
+            text-decoration: underline;
+        }
+
+        .size-guide-link i {
+            margin-right: 5px;
+            font-size: 14px;
+        }
+
+        /* Product details section */
+        .product-descriptions-container {
+            background: white;
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 2px;
+            box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
+        }
+
+        .product-descriptions-container h2 {
+            font-size: 18px;
+            font-weight: 500;
+            color: var(--flipkart-black);
+            padding-bottom: 10px;
+            border-bottom: 1px solid #f0f0f0;
+            margin-bottom: 15px;
+        }
+
+        .description-item {
+            margin-bottom: 15px;
+        }
+
+        .description-item h3 {
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 5px;
+            color: var(--flipkart-black);
+        }
+
+        .description-item p {
+            font-size: 14px;
+            color: var(--flipkart-darkgray);
+            line-height: 1.5;
+        }
+
+        /* Size info section */
+        .product-size-info {
+            background: var(--flipkart-lightblue);
+            padding: 15px;
+            border-radius: 2px;
+            margin: 20px 0;
+            border: 1px solid #eaeaea;
+        }
+
+        .product-size-info h5 {
+            font-size: 16px;
+            font-weight: 500;
+            margin-bottom: 10px;
+            color: var(--flipkart-black);
+        }
+
+        .product-size-info ul {
+            padding-left: 0;
+            margin: 0;
+        }
+
+        .product-size-info li {
+            list-style-type: none;
+            font-size: 14px;
+            margin-bottom: 5px;
+            color: var(--flipkart-darkgray);
+        }
+
+        .product-size-info strong {
+            color: var(--flipkart-black);
+            font-weight: 500;
+        }
+
+        /* Navigation */
+        .secondary-nav {
+            background: white;
+            padding: 15px 0;
+            box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
+            margin-bottom: 20px;
+        }
+
+        .secondary-nav-list {
+            display: flex;
+            justify-content: flex-end;
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .secondary-nav .nav-item {
+            margin-left: 25px;
+        }
+
+        .secondary-nav .nav-link {
+            color: var(--flipkart-blue);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+        }
+
+        .secondary-nav .nav-link i {
+            margin-right: 5px;
+            font-size: 16px;
+        }
+
+        .secondary-nav .nav-link:hover {
+            color: #1a5fc5;
+        }
+    </style>
+</head>
+
+<body data-authenticated="{% if user_authenticated %}true{% else %}false{% endif %}">
+    <!-- Secondary navigation bar -->
+    <nav class="secondary-nav">
+        <div class="container">
+            <ul class="secondary-nav-list">
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'app:wrist_size_guide' %}">
+                        <i class="fas fa-ruler"></i> Wrist Size Guide
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="product-container">
+            <!-- Left Side: Product Images -->
+            <div class="product-images">
+                <!-- Thumbnail Images -->
+                <div class="thumbnail-images">
+                    {% for image in images %}
+                        <div class="thumbnail-container">
+                            
+                            <img src="{{ image.image.url }}" alt="Thumbnail" onclick="changeMainImage('{{ image.image.url }}')">
+                        </div>
+                    {% endfor %}
+                </div>
+
+                <!-- Main Product Image -->
+                <div class="main-image">
+                    
+                      {% with first_image=watch.images.first %}
+                  <img src="{% if watch.image %}{{ watch.image.url }}{% elif first_image %}{{ first_image.image.url }}{% else %}{% static 'img/placeholder.jpg' %}{% endif %}" 
+                       alt="{{ watch.name }}" 
+                       class="img-fluid">
+                  {% endwith %}                </div>
+            </div>
+
+            <!-- Right Side: Product Info -->
+            <div class="product-info">
+                <h1 class="product-title">{{ watch.name }}</h1>
+                <div class="product-subtitle">{{ watch.category }} | {{ watch.dial_color }} | {{ watch.dial_shape }} Dial | {{ watch.movement }}</div>
+                
+                <div class="rating-container">
+                    <i class="fas fa-star"></i> 4.4
+                    <span class="rating-count">(100 Reviews)</span>
+                </div>
+
+                <div class="price-container">
+                    <div class="current-price">₹{{ watch.price }}</div>
+                </div>
+
+                <!-- Size Information Section -->
+                <div class="product-size-info">
+                    <h5>Size Information</h5>
+                    <ul>
+                        {% if watch.wrist_size %}
+                        <li><strong>Recommended Wrist Size:</strong> {{ watch.get_wrist_size_display }}</li>
+                        {% endif %}
+                        {% if watch.case_diameter %}
+                        <li><strong>Case Diameter:</strong> {{ watch.case_diameter }}mm</li>
+                        {% endif %}
+                        {% if watch.band_width %}
+                        <li><strong>Band Width:</strong> {{ watch.band_width }}mm</li>
+                        {% endif %}
+                        {% if watch.adjustable %}
+                        <li><strong>Band:</strong> Adjustable</li>
+                        {% endif %}
+                    </ul>
+                </div>
+
+                
+
+                <div class="action-buttons">
+                    <a href="{% url 'app:login' %}?next={{ request.path }}" class="btn btn-primary">ADD TO CART</a>
+                    <a href="{% url 'app:login' %}?next={{ request.path }}" class="btn btn-secondary">BUY NOW</a>
+                </div>
+
+                <div class="size-guide-link">
+                    <a href="{% url 'app:wrist_size_guide' %}">
+                        <i class="fas fa-ruler"></i> Not sure about your size? Check our guide
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Product Descriptions Section -->
+        <div class="product-descriptions-container">
+            <h2>PRODUCT DETAILS</h2>
+            <div class="product-descriptions">
+                {% for desc in descriptions %}
+                    <div class="description-item">
+                        <h3>{{ desc.title }}</h3>
+                        <p>{{ desc.description }}</p>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function changeMainImage(src) {
+            document.getElementById('main-product-image').src = src;
+        }
+
+        function toggleWishlist(element, watchId) {
+            var userAuthenticated = document.body.getAttribute("data-authenticated") === "true";
+
+            if (!userAuthenticated) {
+                window.location.href = "{% url 'app:login' %}?next={{ request.path }}";
+                return;
+            }
+
+            fetch(`/wishlist/toggle/${watchId}/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}',
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                element.style.color = data.status === 'added' ? "#ff3e6c" : "#ccc";
+            })
+            .catch(error => console.error('Error:', error));
+        }
+    </script>
+</body>
+</html>
+
+
+
+
+

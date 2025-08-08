@@ -1,0 +1,13 @@
+<div class="row g-3" id="product-list">
+    {% for watch in watches %}
+      <div class="col-md-4">
+        <div class="product-card">
+          <img src="{{ watch.image.url }}" alt="{{ watch.name }}">
+          <h6>{{ watch.name }}</h6>
+          <p>₹{{ watch.price }}</p>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+
+  

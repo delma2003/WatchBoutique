@@ -1,0 +1,92 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order History</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #212121;
+        }
+        .order {
+            border-bottom: 1px solid #e0e0e0;
+            padding: 15px 0;
+        }
+        .order:last-child {
+            border-bottom: none;
+        }
+        .order h3 {
+            margin: 0;
+            font-size: 18px;
+        }
+        .order p {
+            margin: 5px 0;
+            color: #555;
+        }
+        .order-items {
+            margin-top: 10px;
+        }
+        .order-item {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        .order-item img {
+            width: 60px;
+            height: 60px;
+            object-fit: contain;
+            border: 1px solid #ddd;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Your Orders</h1>
+        {% if orders %}
+            {% for order in orders %}
+                <div class="order">
+                    <h3>Order #{{ order.id }} - {{ order.created_at|date:"d M Y" }}</h3>
+                    <p><strong>Status:</strong> {{ order.status }}</p>
+                    <p><strong>Payment Method:</strong> {{ order.get_payment_method_display }}</p>
+                    <p><strong>Total Amount:</strong> ₹{{ order.total_amount }}</p>
+                    <p><strong>Delivery Address:</strong> {{ order.address }}</p>
+                    <div class="order-items">
+                        {% for item in order.items.all %}
+                            <div class="order-item">
+                                {% with first_image=item.watch.images.first %}
+  <img src="{% if item.watch.image %}{{ item.watch.image.url }}{% elif first_image %}{{ first_image.image.url }}{% else %}{% static 'img/placeholder.jpg' %}{% endif %}" 
+       alt="{{ item.watch.name }}" 
+       class="img-fluid">
+{% endwith %}
+
+                                <div>
+                                    <p><strong>{{ item.watch.name }}</strong></p>
+                                    <p>Quantity: {{ item.quantity }} | Price: ₹{{ item.price }}</p>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>No orders found.</p>
+        {% endif %}
+        <a href="{% url 'app:index' %}">Continue Shopping</a>
+    </div>
+</body>
+</html>

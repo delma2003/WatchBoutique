@@ -1,0 +1,110 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>My Wishlist</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- FontAwesome for Icons -->
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .wishlist-container {
+            max-width: 1200px;
+            margin: auto;
+            padding: 20px;
+        }
+        .product-card {
+            background: #fff;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            transition: 0.3s ease-in-out;
+        }
+        .product-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+        }
+        .product-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: contain;
+            padding: 10px;
+        }
+        .card-body {
+            text-align: center;
+        }
+        .btn-move {
+            background-color: #ff9f00;
+            border: none;
+            width: 100%;
+        }
+        .btn-move:hover {
+            background-color: #fb641b;
+        }
+    </style>
+</head>
+<body>
+
+<div class="wishlist-container">
+    <h2 class="text-center my-4">My Wishlist</h2>
+
+    {% if wishlist_items %}
+    <div class="row row-cols-1 row-cols-md-4 g-4">
+        {% for item in wishlist_items %}
+        <div class="col">
+            <div class="card product-card">
+                <div class="position-relative">
+                    <!-- Product Image -->
+                    <!-- Product Image with Clickable Link -->
+                    <a href="{% url 'app:product_detail_login' item.watch.id %}">
+                        {% with first_image=item.watch.images.first %}
+                        <img src="{% if item.watch.image %}{{ item.watch.image.url }}{% elif first_image %}{{ first_image.image.url }}{% else %}{% static 'img/placeholder.jpg' %}{% endif %}" 
+                             alt="{{ item.watch.name }}">
+                        {% endwith %}
+                    </a>
+
+                    
+                    <!-- Remove from Wishlist Button -->
+                    <a href="{% url 'app:toggle_wishlist' item.watch.id %}" class="btn btn-light position-absolute top-0 end-0 m-2">
+                        <i class="fas fa-trash text-danger"></i>
+                    </a>
+                </div>
+                <div class="card-body">
+                    <!-- Product Name -->
+                    <h6 class="card-title mb-1">{{ item.watch.name }}</h6>
+                    
+                    <!-- Price -->
+                    <p class="text-muted">₹{{ item.watch.price }}</p>
+
+                    <!-- Move to Cart Button -->
+                    
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <!-- Empty Wishlist Section -->
+    <div class="text-center mt-5">
+        <img src="https://i.imgur.com/O6qE2G6.png" alt="Empty Wishlist" class="img-fluid" style="max-width: 300px;">
+        <h5 class="mt-3">Your wishlist is empty</h5>
+        <a href="{% url 'app:men_loggedin' %}" class="btn btn-outline-primary mt-3">Continue Shopping</a>
+    </div>
+    {% endif %}
+</div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>
+
+

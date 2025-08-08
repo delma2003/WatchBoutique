@@ -1,0 +1,201 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Cart</title>
+    <style>
+        .cart-container {
+            display: flex;
+            justify-content: space-between;
+            margin: 20px;
+        }
+
+        .cart-left {
+            width: 65%;
+            background: white;
+            padding: 20px;
+        }
+
+        .cart-right {
+            width: 30%;
+            background: white;
+            padding: 20px;
+        }
+
+        .delivery-address {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+            background: #f2f2f2;
+        }
+
+        .cart-item {
+            display: flex;
+            border-bottom: 1px solid #ddd;
+            padding: 20px;
+        }
+
+        .cart-item img {
+            width: 120px;
+            height: 120px;
+            object-fit: cover;
+        }
+
+        .cart-item-details {
+            margin-left: 20px;
+        }
+
+        .product-name {
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .product-category {
+            font-size: 14px;
+            color: gray;
+        }
+
+        .out-of-stock {
+            color: red;
+            font-weight: bold;
+        }
+
+        .product-price {
+            font-size: 18px;
+            font-weight: bold;
+            margin: 5px 0;
+        }
+
+        .quantity-controls {
+            display: flex;
+            align-items: center;
+            margin-top: 10px;
+        }
+
+        .quantity-controls a {
+            font-size: 18px;
+            padding: 5px 10px;
+            border: 1px solid #ddd;
+            margin: 0 5px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .cart-actions {
+            margin-top: 10px;
+        }
+
+        .cart-actions a {
+            text-decoration: none;
+            color: blue;
+            margin-right: 10px;
+        }
+
+        .price-details {
+            border: 1px solid #ddd;
+            padding: 20px;
+        }
+
+        .price-details p {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .discount {
+            color: green;
+        }
+
+        .free {
+            color: green;
+        }
+
+        .savings {
+            color: green;
+            font-weight: bold;
+        }
+
+        .place-order-btn {
+            background: orange;
+            color: white;
+            width: 100%;
+            padding: 10px;
+            border: none;
+            cursor: pointer;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    {% if cart_items %}
+        <h2>Your Shopping Cart ({{ cart_items|length }})</h2>
+        <div class="cart-container">
+            <div class="cart-left">
+                
+                
+                {% for item in cart_items %}
+                <div class="cart-item">
+                    {% with first_image=item.watch.images.first %}
+                    <img src="{% if item.watch.image %}{{ item.watch.image.url }}{% elif first_image %}{{ first_image.image.url }}{% else %}{% static 'img/placeholder.jpg' %}{% endif %}" 
+                         alt="{{ item.watch.name }}">
+                    {% endwith %}
+                    <div class="cart-item-details">
+                        <p class="product-name">{{ item.watch.name }}</p>
+                        <p class="product-category">{{ item.watch.category }} | {{ item.watch.dial_color }} {{ item.watch.dial_shape }} Dial | {{ item.watch.movement }} Watch</p>
+                        {% if item.watch.stock == 0 %}
+                            <p class="out-of-stock">Out Of Stock</p>
+                        {% endif %}
+                        <p class="product-price">₹{{ item.watch.price }}</p>
+                        <div class="quantity-controls">
+                            <a href="{% url 'app:update_cart' item.id 'decrease' %}">-</a>
+                            <span>{{ item.quantity }}</span>
+                            <a href="{% url 'app:update_cart' item.id 'increase' %}">+</a>
+                        </div>
+                        <div class="cart-actions">
+                            <a href="#">SAVE FOR LATER</a> |
+                            <a href="{% url 'app:remove_from_cart' item.id %}">REMOVE</a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+            <div class="cart-right">
+                <div class="price-details">
+                    <h3>PRICE DETAILS</h3>
+                    <p>Price ({{ cart_items|length }} items): ₹{{ total_price }}</p>
+                    <p>Discount: <span class="discount">- ₹1,200</span></p>
+                    <p>Delivery Charges: <span class="free">Free</span></p>
+                    <p>Secured Packaging Fee: ₹29</p>
+                    <p>Protect Promise Fee: ₹18</p>
+                    <hr>
+                    <h3>Total Amount: ₹{{ total_price }}</h3>
+                    <p class="savings">You will save ₹1,200 on this order</p>
+                    <button class="place-order-btn" onclick="window.location.href='{% url 'app:order_summary' %}'">PLACE ORDER</button>
+                </div>
+            </div>
+        </div>
+    {% else %}
+        <h2>Your cart is empty</h2>
+    {% endif %}
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

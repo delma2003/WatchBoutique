@@ -1,0 +1,626 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ watch.name }} - Product Details</title>
+    <link rel="stylesheet" href="{% static 'styles.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --flipkart-blue: #2874f0;
+            --flipkart-lightblue: #f0f8ff;
+            --flipkart-gray: #f1f3f6;
+            --flipkart-darkgray: #878787;
+            --flipkart-black: #212121;
+            --flipkart-green: #388e3c;
+            --flipkart-orange: #ff9f00;
+        }
+        
+        body {
+            font-family: 'Roboto', Arial, sans-serif;
+            background-color: var(--flipkart-gray);
+            margin: 0;
+            padding: 0;
+            color: var(--flipkart-black);
+            line-height: 1.4;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+        }
+
+        /* Product container */
+        .product-detail {
+            display: flex;
+            background: white;
+            padding: 20px;
+            border-radius: 2px;
+            box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
+        }
+
+        /* Left side - product images */
+        .product-images {
+            width: 45%;
+            display: flex;
+            flex-direction: row;
+            gap: 15px;
+        }
+
+        .thumbnail-images {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            width: 80px;
+        }
+
+        .thumbnail-container {
+            position: relative;
+            border: 1px solid #f0f0f0;
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 4px;
+        }
+
+        .thumbnail-container img {
+            width: 100%;
+            height: auto;
+        }
+
+        .wishlist-icon, .main-wishlist-icon {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            color: #ccc;
+            font-size: 18px;
+            cursor: pointer;
+            z-index: 2;
+        }
+
+        .wishlist-icon:hover, .main-wishlist-icon:hover {
+            color: #ff3e6c;
+        }
+
+        .main-image {
+            flex-grow: 1;
+            padding: 10px;
+            position: relative;
+        }
+
+        .main-image img {
+            max-width: 100%;
+            max-height: 400px;
+            object-fit: contain;
+        }
+
+        /* Right side - product info */
+        .product-info {
+            width: 55%;
+            padding-left: 30px;
+        }
+
+        .product-title {
+            font-size: 20px;
+            font-weight: 500;
+            color: var(--flipkart-black);
+            margin-bottom: 5px;
+        }
+
+        .product-subtitle {
+            font-size: 14px;
+            color: var(--flipkart-darkgray);
+            margin-bottom: 10px;
+        }
+
+        .rating-container {
+            display: flex;
+            align-items: center;
+            background: var(--flipkart-green);
+            color: white;
+            padding: 2px 8px 2px 6px;
+            border-radius: 3px;
+            width: fit-content;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        .rating-container i {
+            font-size: 12px;
+            margin-right: 4px;
+        }
+
+        .rating-count {
+            color: var(--flipkart-blue);
+            font-size: 14px;
+            margin-left: 8px;
+        }
+
+        .price-container {
+            margin: 15px 0;
+        }
+
+        .current-price {
+            font-size: 28px;
+            font-weight: 500;
+        }
+
+        .size-info {
+            background: var(--flipkart-lightblue);
+            padding: 15px;
+            border-radius: 2px;
+            margin: 20px 0;
+            border: 1px solid #eaeaea;
+        }
+
+        .size-info h5 {
+            font-size: 16px;
+            font-weight: 500;
+            margin-bottom: 10px;
+            color: var(--flipkart-black);
+        }
+
+        .size-info ul {
+            padding-left: 0;
+            margin: 0;
+        }
+
+        .size-info li {
+            list-style-type: none;
+            font-size: 14px;
+            margin-bottom: 5px;
+            color: var(--flipkart-darkgray);
+        }
+
+        .size-info strong {
+            color: var(--flipkart-black);
+            font-weight: 500;
+        }
+
+        .size-select {
+            margin: 20px 0;
+        }
+
+        .size-select label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 8px;
+            color: var(--flipkart-darkgray);
+        }
+
+        .size-select select {
+            padding: 8px 10px;
+            border: 1px solid #c2c2c2;
+            border-radius: 2px;
+            font-size: 14px;
+            width: 200px;
+            outline: none;
+        }
+
+        .size-guide {
+            margin-top: 15px;
+            font-size: 14px;
+        }
+
+        .size-guide a {
+            color: var(--flipkart-blue);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+        }
+
+        .size-guide a:hover {
+            text-decoration: underline;
+        }
+
+        .size-guide a i {
+            margin-right: 5px;
+            font-size: 14px;
+        }
+
+        .actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 25px;
+        }
+
+        .actions button, .actions a {
+            padding: 12px 20px;
+            font-size: 14px;
+            font-weight: 500;
+            border-radius: 2px;
+            cursor: pointer;
+            text-transform: uppercase;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .actions button.wishlist, .actions a[href*='view_cart'] {
+            background: var(--flipkart-orange);
+            color: white;
+            border: none;
+        }
+
+        .actions a.buy-now-btn {
+            background: white;
+            color: var(--flipkart-blue);
+            border: 1px solid var(--flipkart-blue);
+        }
+
+        /* Product details section */
+        .description-section {
+            background: white;
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 2px;
+            box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
+        }
+
+        .description-section h3 {
+            font-size: 18px;
+            font-weight: 500;
+            color: var(--flipkart-black);
+            padding-bottom: 10px;
+            border-bottom: 1px solid #f0f0f0;
+            margin-bottom: 15px;
+        }
+
+        .description-section p {
+            font-size: 14px;
+            color: var(--flipkart-darkgray);
+            line-height: 1.5;
+        }
+
+        /* Reviews section */
+        .reviews-section {
+            background: white;
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 2px;
+            box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
+        }
+
+        .reviews-section h3 {
+            font-size: 18px;
+            font-weight: 500;
+            color: var(--flipkart-black);
+            padding-bottom: 10px;
+            border-bottom: 1px solid #f0f0f0;
+            margin-bottom: 20px;
+        }
+
+        .review-form {
+            margin-bottom: 30px;
+        }
+
+        .review-form h4 {
+            font-size: 16px;
+            font-weight: 500;
+            color: var(--flipkart-black);
+            margin-bottom: 15px;
+        }
+
+        .review-form .rating-input {
+            margin-bottom: 15px;
+        }
+
+        .review-form .rating-input label {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--flipkart-darkgray);
+            margin-right: 10px;
+        }
+
+        .review-form .rating-input select {
+            padding: 8px 10px;
+            border: 1px solid #c2c2c2;
+            border-radius: 2px;
+            font-size: 14px;
+            width: 100px;
+            outline: none;
+        }
+
+        .review-form .comment-input {
+            margin-bottom: 15px;
+        }
+
+        .review-form .comment-input label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--flipkart-darkgray);
+            margin-bottom: 8px;
+        }
+
+        .review-form .comment-input textarea {
+            width: 100%;
+            max-width: 500px;
+            height: 100px;
+            padding: 10px;
+            border: 1px solid #c2c2c2;
+            border-radius: 2px;
+            font-size: 14px;
+            font-family: 'Roboto', Arial, sans-serif;
+            outline: none;
+            resize: vertical;
+        }
+
+        .review-form button {
+            padding: 10px 20px;
+            font-size: 14px;
+            font-weight: 500;
+            border-radius: 2px;
+            cursor: pointer;
+            text-transform: uppercase;
+            background: var(--flipkart-blue);
+            color: white;
+            border: none;
+        }
+
+        .review-form button:hover {
+            background: #1a5fc5;
+        }
+
+        .review-list {
+            margin-top: 20px;
+        }
+
+        .review-item {
+            padding: 15px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .review-item:last-child {
+            border-bottom: none;
+        }
+
+        .review-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .review-header .review-rating {
+            display: flex;
+            align-items: center;
+            background: var(--flipkart-green);
+            color: white;
+            padding: 2px 8px 2px 6px;
+            border-radius: 3px;
+            font-size: 14px;
+            margin-right: 10px;
+        }
+
+        .review-header .review-rating i {
+            font-size: 12px;
+            margin-right: 4px;
+        }
+
+        .review-header .review-username {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--flipkart-black);
+        }
+
+        .review-comment {
+            font-size: 14px;
+            color: var(--flipkart-darkgray);
+            line-height: 1.5;
+        }
+
+        /* Navigation */
+        .secondary-nav {
+            background: white;
+            padding: 15px 0;
+            box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
+            margin-bottom: 20px;
+        }
+
+        .secondary-nav-list {
+            display: flex;
+            justify-content: flex-end;
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .secondary-nav .nav-item {
+            margin-left: 25px;
+        }
+
+        .secondary-nav .nav-link {
+            color: var(--flipkart-blue);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+        }
+
+        .secondary-nav .nav-link i {
+            margin-right: 5px;
+            font-size: 16px;
+        }
+
+        .secondary-nav .nav-link:hover {
+            color: #1a5fc5;
+        }
+
+        .user-greeting {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--flipkart-black);
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Secondary navigation bar -->
+    <nav class="secondary-nav">
+        <div class="container">
+            <ul class="secondary-nav-list">
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'app:order_history' %}">
+                        <i class="fas fa-ruler"></i> My Orders
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="user-greeting">
+            Welcome, {{ request.user.username }}!
+        </div>
+        <section class="product-detail">
+            <div class="product-images">
+                <!-- Thumbnail Images Section -->
+                <div class="thumbnail-images">
+                    {% for image in images %}
+                        <div class="thumbnail-container">
+                            
+                            <img src="{{ image.image.url }}" alt="Thumbnail" onclick="changeMainImage('{{ image.image.url }}')">
+                        </div>
+                    {% endfor %}
+                </div>
+
+                <!-- Main Product Image Section -->
+                <div class="main-image">
+                     
+                       
+                    
+                    {% with first_image=watch.images.first %}
+                    <img src="{% if watch.image %}{{ watch.image.url }}{% elif first_image %}{{ first_image.image.url }}{% else %}{% static 'img/placeholder.jpg' %}{% endif %}" 
+                         alt="{{ watch.name }}" 
+                         class="img-fluid">
+                    {% endwith %}
+                </div>
+            </div>
+
+            <div class="product-info">
+                <h1 class="product-title">{{ watch.name }}</h1>
+                <div class="product-subtitle">{{ watch.category }} | {{ watch.dial_color }} | {{ watch.movement }}</div>
+                
+                
+
+                <div class="price-container">
+                    <div class="current-price">₹{{ watch.price }}</div>
+                </div>
+
+                <div class="size-info">
+                    <h5>Size Information</h5>
+                    <ul>
+                        <li>Strap Length:</strong>{{ watch.band_length }}</li>
+                        <li><strong>Case Diameter:</strong> 46mm</li>
+                    </ul>
+                </div>
+
+                
+
+                <div class="actions">
+                    {% if cart_item %}
+                        <a href="{% url 'app:view_cart' %}">
+                            <button class="wishlist">View Cart</button>
+                        </a>
+                    {% else %}
+                        <form method="POST" action="{% url 'app:add_to_cart' watch.id %}">
+                            {% csrf_token %}
+                            <button type="submit" class="wishlist">Add to Cart</button>
+                        </form>
+                    {% endif %}
+                    <a href="{% url 'app:buy_now' watch.id %}" class="buy-now-btn">Buy Now</a>
+                </div>
+
+                <div class="size-guide">
+                    <a href="{% url 'app:wrist_size_guide' %}">
+                        <i class="fas fa-ruler"></i> Not sure about your size? Check our guide
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Product Descriptions Section -->
+        <div class="product-descriptions-container">
+            <h2>PRODUCT DETAILS</h2>
+            <div class="product-descriptions">
+                {% for desc in descriptions %}
+                    <div class="description-item">
+                        <h3>{{ desc.title }}</h3>
+                        <p>{{ desc.description }}</p>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Reviews Section -->
+        <div class="reviews-section">
+            <h3>Customer Reviews</h3>
+
+            <!-- Review Submission Form -->
+            <div class="review-form">
+                <h4>Write a Review</h4>
+                <form method="POST" action="{% url 'app:submit_review' watch.id %}">
+                    {% csrf_token %}
+                    <div class="rating-input">
+                        <label for="rating">Rating:</label>
+                        <select id="rating" name="rating" required>
+                            <option value="1">1 Star</option>
+                            <option value="2">2 Stars</option>
+                            <option value="3">3 Stars</option>
+                            <option value="4">4 Stars</option>
+                            <option value="5">5 Stars</option>
+                        </select>
+                    </div>
+                    <div class="comment-input">
+                        <label for="comment">Your Review:</label>
+                        <textarea id="comment" name="comment" placeholder="Write your review here..." required></textarea>
+                    </div>
+                    <button type="submit">Submit Review</button>
+                </form>
+            </div>
+
+            <!-- Display Existing Reviews -->
+            <div class="review-list">
+                {% if reviews %}
+                    {% for review in reviews %}
+                        <div class="review-item">
+                            <div class="review-header">
+                                <div class="review-rating">
+                                    <i class="fas fa-star"></i> {{ review.rating }}
+                                </div>
+                                <div class="review-username">{{ review.user.username }}</div>
+                            </div>
+                            <div class="review-comment">{{ review.comment }}</div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <p>No reviews yet. Be the first to review this product!</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function changeMainImage(src) {
+            document.querySelector('.main-image img').src = src;
+        }
+
+        function toggleWishlist(element) {
+            element.style.color = element.style.color === "#ff4d4d" ? "#ccc" : "#ff4d4d";
+        }
+    </script>
+</body>
+</html>

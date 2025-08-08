@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Men's Watches</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+  <style>
+    .filter-section {
+      background-color: #f8f9fa;
+      padding: 20px;
+      border-radius: 5px;
+    }
+    .product-card {
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      padding: 15px;
+      transition: transform 0.3s;
+    }
+    .product-card:hover {
+      transform: scale(1.05);
+    }
+    .product-card img {
+      max-width: 100%;
+      border-radius: 5px;
+    }
+    .product-info {
+      text-align: center;
+    }
+    .discount {
+      color: red;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="bg-light p-3">
+    <div class="container d-flex justify-content-between">
+      <div>
+        <p class="mb-0"><strong>022-68353125</strong> | j.support@tenxcommerce.com</p>
+      </div>
+      <div>
+        <p class="mb-0">10% off for our new users, use code: <strong>WELCOME10</strong></p>
+      </div>
+    </div>
+  </header>
+
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom">
+    <div class="container">
+      <a class="navbar-brand" href="#"><strong>Just Watches</strong></a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link" href="#">Brands</a></li>
+          <li class="nav-item"><a class="nav-link" href="#">Men</a></li>
+          <li class="nav-item"><a class="nav-link" href="#">Women</a></li>
+          <li class="nav-item"><a class="nav-link" href="#">Luxury</a></li>
+          <li class="nav-item"><a class="nav-link" href="#">Stores</a></li>
+          <li class="nav-item"><a class="nav-link" href="#">Sale</a></li>
+          <li class="nav-item"><a class="nav-link" href="#">Blog</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <div class="container my-5">
+    <div class="row">
+      <!-- Filters -->
+      <aside class="col-md-3 filter-section">
+        <h5>Filters</h5>
+        <div class="accordion" id="filterAccordion">
+          <div class="accordion-item">
+            <h2 class="accordion-header">
+              <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#genderFilter">
+                Gender
+              </button>
+            </h2>
+            <div id="genderFilter" class="accordion-collapse collapse">
+              <div class="accordion-body">
+                <ul>
+                  <li>Men</li>
+                  <li>Women</li>
+                  <li>Unisex</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="accordion-item">
+            <h2 class="accordion-header">
+              <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#brandFilter">
+                Brand
+              </button>
+            </h2>
+            <div id="brandFilter" class="accordion-collapse collapse">
+              <div class="accordion-body">Brand options here</div>
+            </div>
+          </div>
+          <!-- Add more filters as needed -->
+        </div>
+      </aside>
+
+      <!-- Products -->
+      <main class="col-md-9">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <h4>Men's Watches</h4>
+          <select class="form-select w-auto">
+            <option>Sort By: New Launch</option>
+            <option>Price: Low to High</option>
+            <option>Price: High to Low</option>
+          </select>
+        </div>
+        <div class="row g-4">
+          <!-- Product Card -->
+          <div class="col-md-4">
+            <div class="product-card">
+              <img src="https://via.placeholder.com/300" alt="Product">
+              <div class="product-info mt-3">
+                <h6>Timex Marlin Silver Round Dial Quartz Analog</h6>
+                <p>₹14,995</p>
+                <p class="discount">Bestseller</p>
+              </div>
+            </div>
+          </div>
+          <!-- Product Card -->
+          <div class="col-md-4">
+            <div class="product-card">
+              <img src="https://via.placeholder.com/300" alt="Product">
+              <div class="product-info mt-3">
+                <h6>Timex E Class Men Round Dial Quartz Analog</h6>
+                <p>
+                  <del>₹8,995</del> <strong>₹8,096</strong>
+                </p>
+                <p class="discount">10% OFF</p>
+              </div>
+            </div>
+          </div>
+          <!-- Add more products -->
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

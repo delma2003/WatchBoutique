@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wrist Size Guide</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container my-5">
+        <h2 class="mb-4">Wrist Size Guide</h2>
+        
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card mb-4">
+                    <div class="card-header bg-light">
+                        <h4>How to Measure Your Wrist</h4>
+                    </div>
+                    <div class="card-body">
+                        <ol>
+                            <li>Use a flexible measuring tape or a strip of paper</li>
+                            <li>Wrap it around your wrist just below the wrist bone</li>
+                            <li>Mark where the ends meet and measure against a ruler</li>
+                            <li>Alternatively, use a string and measure its length</li>
+                        </ol>
+                        
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header bg-light">
+                        <h4>Find Your Wrist Size</h4>
+                    </div>
+                    <div class="card-body">
+                        <form id="wristSizeForm">
+                            <div class="form-group">
+                                <label for="wristMeasurement">Enter your wrist measurement (inches):</label>
+                                <input type="number" step="0.1" class="form-control" id="wristMeasurement" 
+                                       placeholder="e.g. 6.5" min="4" max="10">
+                            </div>
+                            <button type="submit" class="btn btn-primary mt-3">Find My Size</button>
+                        </form>
+                        
+                        <div id="sizeResult" class="mt-4" style="display:none;">
+                            <h5>Your wrist size: <span id="sizeValue"></span></h5>
+                            <p class="mt-2">Recommended watch sizes:</p>
+                            <ul id="sizeRecommendations"></ul>
+                            
+                        </div>
+                        
+                        <div class="mt-4">
+                            <h5>Wrist Size Chart</h5>
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Size</th>
+                                        <th>Wrist Circumference</th>
+                                        <th>Recommended Case Size</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>XS</td>
+                                        <td>5 - 6 inches</td>
+                                        <td>28-34mm</td>
+                                    </tr>
+                                    <tr>
+                                        <td>S</td>
+                                        <td>6 - 6.5 inches</td>
+                                        <td>34-38mm</td>
+                                    </tr>
+                                    <tr>
+                                        <td>M</td>
+                                        <td>6.5 - 7 inches</td>
+                                        <td>38-42mm</td>
+                                    </tr>
+                                    <tr>
+                                        <td>L</td>
+                                        <td>7 - 7.5 inches</td>
+                                        <td>42-46mm</td>
+                                    </tr>
+                                    <tr>
+                                        <td>XL</td>
+                                        <td>7.5+ inches</td>
+                                        <td>46mm+</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    document.getElementById('wristSizeForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const measurement = parseFloat(document.getElementById('wristMeasurement').value);
+        
+        let size, sizeText, recommendations;
+        
+        if (measurement < 6) {
+            size = 'xs';
+            sizeText = 'XS (5-6 inches)';
+            recommendations = ['28-34mm case diameter', '150mm to 185mm length straps'];
+        } else if (measurement >= 6 && measurement < 6.5) {
+            size = 's';
+            sizeText = 'S (6-6.5 inches)';
+            recommendations = ['34-38mm case diameter', ' 186mm to 200mm length straps'];
+        } else if (measurement >= 6.5 && measurement < 7) {
+            size = 'm';
+            sizeText = 'M (6.5-7 inches)';
+            recommendations = ['38-42mm case diameter', '201mm to 210mm length straps'];
+        } else if (measurement >= 7 && measurement < 7.5) {
+            size = 'l';
+            sizeText = 'L (7-7.5 inches)';
+            recommendations = ['42-46mm case diameter', '211mm to 220mm length straps'];
+        } else {
+            size = 'xl';
+            sizeText = 'XL (7.5+ inches)';
+            recommendations = ['46mm+ case diameter', '221mm to 240mm length straps'];
+        }
+        
+        document.getElementById('sizeValue').textContent = sizeText;
+        const recList = document.getElementById('sizeRecommendations');
+        recList.innerHTML = '';
+        recommendations.forEach(rec => {
+            const li = document.createElement('li');
+            li.textContent = rec;
+            recList.appendChild(li);
+        });
+        
+        document.getElementById('sizeResult').style.display = 'block';
+    });
+    </script>
+</body>
+</html>

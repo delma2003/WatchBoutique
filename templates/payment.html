@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Checkout | Payment</title>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+</head>
+<body>
+    <h2>Complete Your Payment</h2>
+    <p>Total Amount: ₹{{ total_price }}</p>
+
+    <!-- Razorpay Payment Form -->
+    <form id="payment-form" method="POST" action="{{ callback_url }}">
+        {% csrf_token %}
+        <input type="hidden" name="razorpay_payment_id" id="razorpay_payment_id">
+        <input type="hidden" name="razorpay_order_id" id="razorpay_order_id">
+        <input type="hidden" name="razorpay_signature" id="razorpay_signature">
+    </form>
+
+    <script>
+        var options = {
+            "key": "{{ razorpay_merchant_key }}", // Razorpay Merchant Key
+            "amount": "{{ razorpay_amount }}", // Amount in paise
+            "currency": "{{ currency }}",
+            "name": "WatchBoutique",
+            "description": "Purchase of Watches",
+            "order_id": "{{ razorpay_order_id }}", // Razorpay Order ID
+            "handler": function (response) {
+                document.getElementById('razorpay_payment_id').value = response.razorpay_payment_id;
+                document.getElementById('razorpay_order_id').value = response.razorpay_order_id;
+                document.getElementById('razorpay_signature').value = response.razorpay_signature;
+                document.getElementById('payment-form').submit();
+            },
+            "prefill": {
+                "name": "{{ request.user.username }}",
+                "email": "{{ request.user.email }}"
+            },
+            "theme": {
+                "color": "#3399cc"
+            },
+            "method": {
+                "netbanking": true,
+                "card": true,
+                "upi": true,         // ✅ Ensure UPI is allowed
+                "wallet": true
+            },
+            "modal": {
+                "ondismiss": function () {
+                    alert("Payment popup closed.");
+                }
+            }
+        };
+
+        var rzp = new Razorpay(options);
+        rzp.open(); // Auto-open checkout on page load
+    </script>
+</body>
+</html>

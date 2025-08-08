@@ -1,0 +1,334 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Summary</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f1f3f6;
+            margin: 0;
+            padding: 0;
+        }
+
+        .checkout-container {
+            display: flex;
+            width: 80%;
+            margin: 20px auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            gap: 20px;
+        }
+
+        /* Left Section */
+        .left-section {
+            width: 65%;
+        }
+
+        /* Right Section */
+        .right-section {
+            width: 35%;
+            background-color: #fff;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            height: fit-content;
+        }
+
+        .section {
+            border-bottom: 1px solid #e0e0e0;
+            padding: 15px 0;
+        }
+
+        h3 {
+            font-size: 18px;
+            margin: 0;
+            color: #333;
+        }
+
+        .order-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 10px 0;
+        }
+
+        .order-item img {
+            width: 100px; /* Set image width */
+            height: 100px; /* Set image height */
+            object-fit: contain;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+
+        .order-details {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .product-name {
+            font-size: 16px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .price {
+            font-size: 16px;
+            font-weight: bold;
+            color: #388e3c;
+        }
+
+        .free {
+            color: #388e3c;
+            font-weight: bold;
+        }
+
+        .price-details p {
+            font-size: 14px;
+            color: #333;
+            display: flex;
+            justify-content: space-between;
+            padding: 5px 0;
+        }
+
+        button {
+            background-color: #fb641b;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            cursor: pointer;
+            font-size: 16px;
+            border-radius: 3px;
+        }
+
+        button:hover {
+            background-color: #e55a0b;
+        }
+
+        .checkout-footer {
+            display: flex;
+            justify-content: flex-end;
+            padding-top: 15px;
+            width: 80%;
+            margin: auto;
+        }
+        .quantity-controls {
+            display: flex;
+            align-items: center;
+        }
+        
+        .quantity-box {
+            display: flex;
+            align-items: center;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+            padding: 5px;
+            width: fit-content;
+        }
+        
+        .update-form {
+            display: inline; /* Makes sure the form does not break the line */
+            margin: 0;
+            padding: 0;
+        }
+        
+        button.decrease-qty, button.increase-qty {
+            background-color: #ff6f61;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            font-size: 16px;
+            font-weight: bold;
+            text-align: center;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        
+        button.decrease-qty:hover, button.increase-qty:hover {
+            background-color: #e65b50;
+        }
+        
+        .quantity {
+            padding: 0 15px;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        .address-container {
+            display: flex;
+            align-items: center; /* Align textarea and button */
+            gap: 10px; /* Spacing between textarea and button */
+        }
+        
+        #address-field {
+            width: 60%; /* Reduce width */
+            height: 40px; /* Reduce height */
+            resize: none; /* Prevent resizing */
+            padding: 8px;
+            font-size: 14px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        
+        #edit-address-btn, #save-address-btn {
+            background-color: #ff6f61;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            font-size: 14px;
+            border-radius: 5px;
+            cursor: pointer;
+            white-space: nowrap; /* Prevents text wrapping */
+        }
+        
+        #edit-address-btn:hover, #save-address-btn:hover {
+            background-color: #e65b50;
+        }
+        .cod-btn {
+            background-color: #ff9800;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            font-size: 16px;
+            border-radius: 3px;
+            cursor: pointer;
+            margin-right: 10px; /* Space between COD and Continue */
+        }
+        
+        .cod-btn:hover {
+            background-color: #e68900;
+        }
+        
+        
+        
+        
+    </style>
+</head>
+<body>
+    <div class="checkout-container">
+        <!-- Left Section -->
+        <div class="left-section">
+            <!-- Login -->
+            <div class="section">
+                <h3>LOGIN </h3>
+                <p>{{ request.user.username }}</p>
+            </div>
+
+            <!-- Delivery Address -->
+<!-- Delivery Address -->
+<div class="section">
+    <h3>DELIVERY ADDRESS</h3>
+    <form method="post" action="{% url 'app:save_address' %}" id="address-form">
+        {% csrf_token %}
+        <input type="hidden" name="next_page" value="order_summary">  <!-- Added hidden input -->
+        <div class="address-container">
+            <textarea id="address-field" name="address" rows="3" placeholder="Enter Delivery Address" required readonly>
+                {% if user.address_set.first %}{{ user.address_set.first.address }}{% endif %}
+            </textarea>
+            <button type="button" id="edit-address-btn" onclick="toggleAddressEdit()">Change Address</button>
+            <button type="submit" id="save-address-btn" style="display: none;">Save Address</button>
+        </div>
+    </form>
+    
+</div>
+ 
+
+
+
+
+            <!-- Order Summary -->
+<div class="section order-summary">
+    <h3>ORDER SUMMARY</h3>
+    {% for item in cart_items %}
+    <div class="order-item" data-item-id="{{ item.id }}">
+        {% with first_image=item.watch.images.first %}
+        <img src="{% if item.watch.image %}{{ item.watch.image.url }}{% elif first_image %}{{ first_image.image.url }}{% else %}{% static 'img/placeholder.jpg' %}{% endif %}" 
+             alt="{{ item.watch.name }}">
+        {% endwith %}        <div class="order-details">
+            <p class="product-name">{{ item.watch.name }}</p>
+            <p>{{ item.watch.category }} {{ item.watch.dial_color }} {{ item.watch.dial_shape }} Dial {{ item.watch.movement }} Watch</p>
+            
+            <!-- Quantity Controls -->
+            <div class="quantity-controls">
+                <div class="quantity-box">
+                    <form action="{% url 'app:update_cart' item.id 'decrease' %}?next=app:order_summary" method="post" class="update-form">
+                        {% csrf_token %}
+                        <button type="submit" class="decrease-qty">-</button>
+                    </form>
+                    
+                    <span class="quantity">{{ item.quantity }}</span>
+                    
+                    <form action="{% url 'app:update_cart' item.id 'increase' %}?next=app:order_summary" method="post" class="update-form">
+                        {% csrf_token %}
+                        <button type="submit" class="increase-qty">+</button>
+                    </form>
+                      
+                </div>
+                
+            </div>
+
+            <p class="price">₹{{ item.watch.price }}</p>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+        </div>
+
+        <!-- Right Section: Price Details -->
+        <div class="right-section">
+            <div class="section price-details">
+                <h3>PRICE DETAILS</h3>
+                <div class="price-row">
+                    <p><strong>Price ({{ cart_items|length }} items):<strong></p>
+                    <p><strong>₹{{ total_price }}<strong></p>
+                </div>
+                <div class="price-row">
+                    <p>Delivery Charges:</p>
+                    <p class="free">FREE</p>
+                </div>
+                <div class="price-row total">
+                    <p><strong>Total Payable:</strong></p>
+                    <p><strong>₹{{ total_price }}</strong></p>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+    
+
+
+    <!-- Modify the continue button section -->
+    <div class="checkout-footer">
+        <form method="post" action="{% url 'app:process_cod_order' %}">
+            {% csrf_token %}
+            <button type="submit" class="place-order-btn">CASH ON DELIVERY</button>
+        </form>
+<div class="checkout-footer">
+    <form method="post" action="{% url 'app:order_payment' %}" id="payment-form">
+        {% csrf_token %}
+        <input type="hidden" name="total_amount" value="{{ total_price }}">
+        <button type="submit" class="continue-btn">PAY NOW</button>
+    </form>
+</div>
+    <script>
+        function toggleAddressEdit() {
+            let addressField = document.getElementById("address-field");
+            let editButton = document.getElementById("edit-address-btn");
+            let saveButton = document.getElementById("save-address-btn");
+        
+            if (addressField.readOnly) {
+                addressField.readOnly = false;  // Enable editing
+                addressField.style.border = "2px solid #388e3c";  // Highlight input
+                editButton.style.display = "none";  // Hide 'Change Address' button
+                saveButton.style.display = "inline";  // Show 'Save Address' button
+            }
+        }
+        </script>
+</body>
+</html>

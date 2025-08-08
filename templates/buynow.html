@@ -1,0 +1,446 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buy Now</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+            color: #212121;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .address-section {
+            background: #f5f5f5;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+        
+        .address-section h2 {
+            margin: 0 0 10px 0;
+            font-size: 18px;
+            font-weight: 500;
+        }
+        
+        .address-section p {
+            margin: 5px 0;
+        }
+        
+        .address-section a {
+            color: #2874f0;
+            text-decoration: none;
+            font-size: 14px;
+        }
+        
+        .order-summary {
+            margin-bottom: 20px;
+        }
+        
+        .order-summary h2 {
+            font-size: 18px;
+            margin: 0 0 15px 0;
+            font-weight: 500;
+        }
+        
+        .product-info {
+            display: flex;
+            margin-bottom: 15px;
+        }
+        
+        .product-image {
+            width: 80px;
+            height: 80px;
+            margin-right: 15px;
+        }
+        
+        .product-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            border: 1px solid #f0f0f0;
+        }
+        
+        .product-details {
+            flex: 1;
+        }
+        
+        .product-name {
+            font-weight: 500;
+            margin-bottom: 5px;
+        }
+        
+        .delivery-info {
+            color: #388e3c;
+            font-size: 14px;
+            margin: 5px 0;
+        }
+        
+        .seller-info {
+            margin: 10px 0;
+        }
+        
+        .seller-info a {
+            color: #2874f0;
+            text-decoration: none;
+            font-size: 14px;
+        }
+        
+        .quantity-controls {
+            display: flex;
+            align-items: center;
+            margin: 10px 0;
+        }
+        
+        .update-form {
+            display: inline;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .qty-btn {
+            background: #f0f0f0;
+            border: 1px solid #c2c2c2;
+            width: 25px;
+            height: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .qty-btn:hover {
+            background: #e0e0e0;
+        }
+        
+        .quantity {
+            margin: 0 10px;
+            font-weight: 500;
+            min-width: 20px;
+            text-align: center;
+        }
+        
+        .price {
+            font-weight: 500;
+            color: #212121;
+        }
+        
+        .email-notice {
+            font-size: 14px;
+            margin: 15px 0;
+            padding-bottom: 15px;
+            border-bottom: 1px dashed #e0e0e0;
+        }
+        
+        .price-details {
+            margin: 20px 0;
+        }
+        
+        .price-details h3 {
+            font-size: 16px;
+            margin: 0 0 15px 0;
+            font-weight: 500;
+        }
+        
+        .price-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+        
+        .total-row {
+            font-weight: 500;
+            font-size: 16px;
+            padding-top: 10px;
+            border-top: 1px dashed #e0e0e0;
+        }
+        
+        .savings {
+            color: #388e3c;
+            font-weight: 500;
+            margin: 15px 0;
+            font-size: 14px;
+        }
+        
+        .secure-payment {
+            font-size: 12px;
+            color: #878787;
+            margin-bottom: 15px;
+        }
+        
+        .terms {
+            font-size: 12px;
+            color: #878787;
+            margin-bottom: 20px;
+        }
+        
+        .place-order-btn {
+            background: #fb641b;
+            color: white;
+            border: none;
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+            font-weight: 500;
+            border-radius: 2px;
+            cursor: pointer;
+        }
+        
+        /* Address Form Styles */
+        .address-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        #address-field {
+            width: 60%;
+            height: 40px;
+            resize: none;
+            padding: 8px;
+            font-size: 14px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        
+        #edit-address-btn, #save-address-btn {
+            background-color: #ff6f61;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            font-size: 14px;
+            border-radius: 5px;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+        
+        #edit-address-btn:hover, #save-address-btn:hover {
+            background-color: #e65b50;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Delivery Address -->
+        <div class="address-section">
+            <h2>DELIVERY ADDRESS</h2>
+            <p><strong>{{ request.user.get_full_name }}</strong></p>
+            
+            <form method="post" action="{% url 'app:save_address' %}" id="address-form">
+                {% csrf_token %}
+                <input type="hidden" name="next_page" value="buy_now">
+                <div class="address-container">
+                    <textarea id="address-field" name="address" rows="3" placeholder="Enter Delivery Address" required readonly>
+                        {% if user.address_set.first %}{{ user.address_set.first.address }}{% endif %}
+                    </textarea>
+                    <button type="button" id="edit-address-btn" onclick="toggleAddressEdit()">Change Address</button>
+                    <button type="submit" id="save-address-btn" style="display: none;">Save Address</button>
+                </div>
+            </form>
+        </div>
+        
+        <!-- Order Summary -->
+        <div class="order-summary">
+            <h2>ORDER SUMMARY</h2>
+            {% for item in cart_items %}
+            <div class="product-info">
+                <div class="product-image">
+                    {% with first_image=item.watch.images.first %}
+                    <img src="{% if item.watch.image %}{{ item.watch.image.url }}{% elif first_image %}{{ first_image.image.url }}{% else %}{% static 'img/placeholder.jpg' %}{% endif %}" 
+                         alt="{{ item.watch.name }}">
+                    {% endwith %}                </div>
+                <div class="product-details">
+                    <div class="product-name">{{ item.watch.name }}</div>
+                    <div class="delivery-info">Delivery by {{ delivery_date }} | ₹40 FREE</div>
+                    <div class="seller-info">
+                        <a href="#">Select: TIMEWEAR AND BEYOND</a>
+                    </div>
+                    <div style="margin:5px 0;">1. <strong>REMOVE</strong></div>
+                    
+                    <div class="quantity-controls">
+                        <form action="{% url 'app:update_buy_now' item.id 'decrease' %}" method="post" class="update-form">
+                            {% csrf_token %}
+                            <input type="hidden" name="watch_id" value="{{ item.watch.id }}">
+                            <button type="submit" class="qty-btn">-</button>
+                        </form>
+                        <span class="quantity">{{ item.quantity }}</span>
+                        <form action="{% url 'app:update_buy_now' item.id 'increase' %}" method="post" class="update-form">
+                            {% csrf_token %}
+                            <input type="hidden" name="watch_id" value="{{ item.watch.id }}">
+                            <button type="submit" class="qty-btn">+</button>
+                        </form>
+                    </div>
+                    
+                    <div class="price">₹{{ item.watch.price }}</div>
+                </div>
+            </div>
+            {% endfor %}
+            
+            <div class="email-notice">
+                Order confirmation email will be sent to <strong>{{ request.user.email }}</strong>
+            </div>
+        </div>
+        
+        <!-- Price Details -->
+        <div class="price-details">
+            <h3>PRICE DETAILS</h3>
+            <div class="price-row">
+                <span>Price ({{ cart_items|length }} item)</span>
+                <span>₹<span class="item-price">{{ total_price }}</span></span>
+            </div>
+            <div class="price-row">
+                <span>Delivery Charges</span>
+                <span>₹40 FREE</span>
+            </div>
+            
+            <div class="price-row total-row">
+                <span>Total Payable</span>
+                <span>₹<span class="total-price">{{ total_price}}</span></span>
+            </div>
+        </div>
+        
+        <div class="savings">
+            Your Total Savings on this order ₹1,203
+        </div>
+        
+        <div class="secure-payment">
+            Safe and Secure Payments. Easy returns. 100% Authentic products.
+        </div>
+        
+        <div class="terms">
+            By continuing with the order, you confirm that you are above 18 years of age, and you agree to the Terms of Use and Privacy Policy.
+        </div>
+        
+        <form method="post" action="{% url 'app:order_payment' %}">
+            {% csrf_token %}
+            <input type="hidden" name="total_amount" value="{{ total_price }}">
+            <button type="submit" class="place-order-btn">PAY NOW</button>
+        </form>
+        <hr style="margin: 15px 0; border: 1px solid #ccc;">
+        <form method="post" action="{% url 'app:process_cod_order' %}">
+            {% csrf_token %}
+            <button type="submit" class="place-order-btn">CASH ON DELIVERY</button>
+        </form>
+    </div>
+
+    <script>
+        function toggleAddressEdit() {
+            let addressField = document.getElementById("address-field");
+            let editButton = document.getElementById("edit-address-btn");
+            let saveButton = document.getElementById("save-address-btn");
+        
+            if (addressField.readOnly) {
+                addressField.readOnly = false;
+                addressField.style.border = "2px solid #388e3c";
+                editButton.style.display = "none";
+                saveButton.style.display = "inline";
+            }
+        }
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            // Handle all quantity update forms
+            document.querySelectorAll('.update-form').forEach(form => {
+                form.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    
+                    const form = this;
+                    const formData = new FormData(form);
+                    
+                    // Show loading state
+                    const button = form.querySelector('button');
+                    const originalText = button.innerHTML;
+                    button.innerHTML = '...';
+                    button.disabled = true;
+                    
+                    fetch(form.action, {
+                        method: 'POST',
+                        body: formData,
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest',
+                            'X-CSRFToken': form.querySelector('[name=csrfmiddlewaretoken]').value
+                        }
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            return response.json().then(err => { throw err; });
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        // Restore button state
+                        button.innerHTML = originalText;
+                        button.disabled = false;
+                        
+                        if (data.success) {
+                            if (data.redirect) {
+                                window.location.href = data.redirect;
+                                return;
+                            }
+                            
+                            // Update quantity display
+                            const quantityElement = form.closest('.quantity-controls').querySelector('.quantity');
+                            if (quantityElement && data.new_quantity !== undefined) {
+                                quantityElement.textContent = data.new_quantity;
+                            }
+                            
+                            // Update prices
+                            if (data.item_price !== undefined) {
+                                document.querySelector('.item-price').textContent = data.item_price.toFixed(2);
+                            }
+                            if (data.total_price !== undefined) {
+                                document.querySelector('.total-price').textContent = data.total_price.toFixed(2);
+                                document.querySelector('input[name="total_amount"]').value = data.total_price;
+                            }
+                            
+                            // Disable minus button when quantity is 1
+                            const minusButton = document.querySelector('.update-form [action*="decrease"] button.qty-btn');
+                            if (minusButton) {
+                                minusButton.disabled = data.new_quantity === 1;
+                            }
+                            
+                        } else {
+                            // Show error message
+                            alert(data.error || 'Error updating quantity');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        // Restore button state
+                        button.innerHTML = originalText;
+                        button.disabled = false;
+                        
+                        if (error.redirect) {
+                            window.location.href = error.redirect;
+                        } else {
+                            alert(error.error || 'An error occurred. Please try again.');
+                        }
+                    });
+                });
+            });
+            
+            // Initialize minus button state on page load
+            const initialQuantity = parseInt(document.querySelector('.quantity').textContent);
+            const minusButton = document.querySelector('.update-form [action*="decrease"] button.qty-btn');
+            if (minusButton && initialQuantity === 1) {
+                minusButton.disabled = true;
+            }
+        });
+    </script>
+</body>
+</html>   
