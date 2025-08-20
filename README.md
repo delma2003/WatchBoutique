@@ -2,6 +2,7 @@
 
 **WatchBoutique** is an online store for stylish watches built using Python Django. It supports features like product browsing, user login, cart, wishlist, checkout, and order tracking.
 
+
 ## 🛠 Tech Stack
 
 - Python (Django Framework)
